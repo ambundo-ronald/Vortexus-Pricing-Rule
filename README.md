@@ -1,6 +1,6 @@
 # Pricing Rule
 
-Custom discount management app for ERPNext.
+Custom discount management app for ERPNext/Frappe version 16.
 
 This app provides:
 - Discount approval workflow for Quotation and Sales Order.
@@ -65,6 +65,8 @@ cd $PATH_TO_YOUR_BENCH
 bench get-app $URL_OF_THIS_REPO --branch develop
 bench install-app pricing_rule
 ```
+
+Requires Frappe and ERPNext `>=16.0.0,<17.0.0`.
 
 ## Development
 

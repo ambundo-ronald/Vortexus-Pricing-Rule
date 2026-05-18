@@ -69,11 +69,12 @@ class ItemGroupDiscountRule(Document):
 			"Item",
 			filters={"item_group": self.item_group},
 			pluck="name",
+			order_by="name asc",
 		)
 
 	@frappe.whitelist()
 	def get_all_items(self):
-		return frappe.get_all("Item", pluck="name")
+		return frappe.get_all("Item", pluck="name", order_by="name asc")
 
 	@frappe.whitelist()
 	def toggle_rule(self):
@@ -94,6 +95,7 @@ def _get_rule_item_codes(rule_doc):
 			"Item",
 			filters={"item_group": rule_doc.item_group},
 			pluck="name",
+			order_by="name asc",
 		)
 
 	if rule_doc.apply_on == "Item":

@@ -209,6 +209,7 @@ def _get_active_rules():
 		"Item Group Discount Rule",
 		filters={"is_enabled": 1, "start_date": ["<=", today]},
 		fields=["name", "apply_on", "item_group", "max_discount_percentage", "end_date"],
+		order_by="modified desc",
 	)
 	if not rules:
 		return []
@@ -218,6 +219,7 @@ def _get_active_rules():
 		"Discount Rule Item",
 		filters={"parent": ["in", rule_names]},
 		fields=["parent", "item_code"],
+		order_by="idx asc",
 	)
 	item_map = {}
 	for row in items:
@@ -248,6 +250,7 @@ def _get_active_customer_rules():
 		"Customer Group Discount Rule",
 		filters={"is_enabled": 1, "start_date": ["<=", today]},
 		fields=["name", "customer_group", "discount_type", "max_discount_percentage", "end_date"],
+		order_by="modified desc",
 	)
 	
 	if not rules:
@@ -259,7 +262,8 @@ def _get_active_customer_rules():
 		child_rows = frappe.get_all(
 			"Customer Discount Rule Item Group",
 			filters={"parent": ["in", rule_names]},
-			fields=["parent", "item_group", "discount_percentage"]
+			fields=["parent", "item_group", "discount_percentage"],
+			order_by="idx asc",
 		)
 		for row in child_rows:
 			if row.parent not in item_groups_map:

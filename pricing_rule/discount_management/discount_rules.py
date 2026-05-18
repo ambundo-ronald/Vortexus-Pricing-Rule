@@ -16,6 +16,7 @@ def get_applicable_max_discount(item_code, item_group):
 		"Item Group Discount Rule",
 		filters={"is_enabled": 1, "start_date": ["<=", today]},
 		fields=["name", "apply_on", "item_group", "max_discount_percentage", "end_date"],
+		order_by="modified desc",
 	)
 	if not rules:
 		return None
@@ -25,6 +26,7 @@ def get_applicable_max_discount(item_code, item_group):
 		"Discount Rule Item",
 		filters={"parent": ["in", rule_names]},
 		fields=["parent", "item_code"],
+		order_by="idx asc",
 	)
 	item_map = {}
 	for row in items:
