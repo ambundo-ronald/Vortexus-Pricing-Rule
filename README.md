@@ -26,6 +26,7 @@ This app provides:
 - Manual deletions in the items list are preserved.
 
 ### Imported Item Landed Cost Pricing
+- Disabled by default. Enable **Pricing Rule Settings > Enable Landed Cost Pricing** before using it.
 - Adds `Item.is_imported` and a `Landed Cost Components` child table.
 - On Purchase Receipt or Landed Cost Voucher submission:
   - Calculates landed cost per imported item.

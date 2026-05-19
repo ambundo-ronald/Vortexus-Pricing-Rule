@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "allow_import": 0,
+ "allow_rename": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "landed_cost_section",
+  "enable_landed_cost_pricing"
+ ],
+ "fields": [
+  {
+   "fieldname": "landed_cost_section",
+   "fieldtype": "Section Break",
+   "label": "Landed Cost"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, submitted Purchase Receipts and Landed Cost Vouchers can update imported item landed cost components and selling prices.",
+   "fieldname": "enable_landed_cost_pricing",
+   "fieldtype": "Check",
+   "label": "Enable Landed Cost Pricing"
+  }
+ ],
+ "issingle": 1,
+ "module": "Discount Management",
+ "name": "Pricing Rule Settings",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,15 +1,20 @@
 import frappe
 from frappe.utils import flt
-from erpnext.stock.doctype.purchase_receipt.purchase_receipt import (
-	get_item_account_wise_additional_cost,
-)
+
+SETTINGS_DOCTYPE = "Pricing Rule Settings"
 
 
 def handle_purchase_receipt(doc, method=None):
+	if not is_landed_cost_pricing_enabled():
+		return
+
 	_update_items_from_receipt(doc.name)
 
 
 def handle_landed_cost_voucher(doc, method=None):
+	if not is_landed_cost_pricing_enabled():
+		return
+
 	for receipt in doc.purchase_receipts:
 		if receipt.receipt_document:
 			_update_items_from_receipt(receipt.receipt_document)
@@ -17,6 +22,9 @@ def handle_landed_cost_voucher(doc, method=None):
 
 @frappe.whitelist()
 def recalculate_for_item(item_code):
+	if not is_landed_cost_pricing_enabled():
+		return "Landed Cost Pricing is disabled in Pricing Rule Settings."
+
 	item_doc = frappe.get_doc("Item", item_code)
 	if not item_doc.get("is_imported"):
 		return "Item is not marked as imported."
@@ -38,7 +46,7 @@ def recalculate_for_item(item_code):
 
 def _update_items_from_receipt(receipt_name):
 	receipt = frappe.get_doc("Purchase Receipt", receipt_name)
-	additional_costs = get_item_account_wise_additional_cost(receipt_name) or {}
+	additional_costs = _get_item_account_wise_additional_cost(receipt_name) or {}
 
 	for item in receipt.items:
 		if not _is_imported_item(item.item_code):
@@ -122,3 +130,25 @@ def _get_standard_selling_price_list():
 
 def _is_imported_item(item_code):
 	return bool(frappe.db.get_value("Item", item_code, "is_imported"))
+
+
+@frappe.whitelist()
+def is_landed_cost_pricing_enabled():
+	if not frappe.db.exists("DocType", SETTINGS_DOCTYPE):
+		return False
+
+	return bool(frappe.db.get_single_value(SETTINGS_DOCTYPE, "enable_landed_cost_pricing"))
+
+
+def _get_item_account_wise_additional_cost(receipt_name):
+	try:
+		from erpnext.stock.doctype.purchase_receipt.purchase_receipt import (
+			get_item_account_wise_additional_cost,
+		)
+	except ImportError:
+		frappe.throw(
+			"Landed Cost Pricing is enabled, but ERPNext does not expose "
+			"get_item_account_wise_additional_cost in this version."
+		)
+
+	return get_item_account_wise_additional_cost(receipt_name)
